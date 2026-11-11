@@ -1446,6 +1446,10 @@ Like Telegram: network trouble shows no banner; **the page title becomes "small 
 
 <a id="ssh-隧道直连不通时的后备891"></a>
 
+## Network switching (Settings › Network)
+
+Top-level **Settings › Server › Network** (组网切换) picks a sticky **Home** (LAN) or **Away** (outside) mode for the current hub group. The mode and selected address live on `PairedHub` in the keychain registry (`networkMode`, `selectedEndpoint`, `candidateEndpoints`) and survive launches. Connect / reconnect / health probes do not change them; only this Settings page does. Candidate addresses come from the pairing URL, hub `public_url`, and the hub's own mesh endpoints. User-configured SSH / local-proxy / in-app tunnels still apply when the sticky address itself does not answer.
+
 ## SSH tunnels (fallback when direct connections fail, #891)
 
 When a device cannot reach the hub address, connect through an SSH server. For the mechanism, server setup and security, see [network.md, "Connecting to hub through SSH"](../operations/network.md#经-ssh-隧道连-hub直连不通时的后备); this section covers the App side.

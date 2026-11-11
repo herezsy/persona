@@ -496,6 +496,27 @@ class EndpointEditorStateTest {
             state.update { s -> s.copy(entries = s.entries.sortedBy { defaults.indexOf(it.url).takeIf { i -> i >= 0 } ?: Int.MAX_VALUE }, customOrder = false) }
         }
 
+        override suspend fun setMode(mode: NetworkMode) {
+            refuse()
+            state.update { it.copy(mode = mode, selected = it.entries.firstOrNull { entry ->
+                when (mode) {
+                    NetworkMode.Home -> entry.kind == "lan"
+                    NetworkMode.Away -> entry.kind != "lan"
+                } && entry.enabled
+            }?.url) }
+        }
+
+        override suspend fun select(url: String) {
+            refuse()
+            val entry = state.value.entries.firstOrNull { it.url == url } ?: return
+            state.update {
+                it.copy(
+                    mode = if (entry.kind == "lan") NetworkMode.Home else NetworkMode.Away,
+                    selected = url,
+                )
+            }
+        }
+
         override suspend fun test(url: String): EndpointTestResult {
             tested += url
             testFailure?.let { throw it }

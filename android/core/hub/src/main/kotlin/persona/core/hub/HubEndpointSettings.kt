@@ -11,6 +11,7 @@ import persona.core.contracts.api.EndpointEntry
 import persona.core.contracts.api.EndpointOverrides
 import persona.core.contracts.api.EndpointSource
 import persona.core.contracts.api.EndpointTestResult
+import persona.core.contracts.api.NetworkMode
 import java.io.IOException
 import java.time.Instant
 import java.util.concurrent.ConcurrentHashMap
@@ -19,7 +20,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -57,6 +60,28 @@ class HubEndpointSettings(
         connection.updateOverrides(stored.value)
         // Pushes always read the latest stored value under the edit lock, so a slow collector cannot reapply an old one.
         scope.launch { stored.collect { edits.withLock { connection.updateOverrides(stored.value) } } }
+        // Remember the connected network once (and keep selected aligned while the user-chosen mode stays put).
+        // Never changes mode from probes: only setMode / select do that.
+        scope.launch {
+            connection.route.mapNotNull { it?.endpoint }.distinctUntilChanged { a, b ->
+                endpointKey(a.url) == endpointKey(b.url) && a.kind == b.kind
+            }.collect { endpoint ->
+                edits.withLock {
+                    val current = stored.value
+                    val key = endpointKey(endpoint.url)
+                    val mode = current.mode ?: networkModeOf(endpoint.kind)
+                    if (current.mode == mode && current.selected == key) return@withLock
+                    // Do not overwrite an explicit selection with a different route of the same mode (failover).
+                    if (current.mode != null && current.selected != null && current.selected != key) return@withLock
+                    val saved = try {
+                        save { it.copy(mode = mode, selected = key) }
+                    } catch (_: IOException) {
+                        return@withLock
+                    }
+                    connection.updateOverrides(saved)
+                }
+            }
+        }
     }
 
     override val state: StateFlow<ConnectionEndpointsState> =
@@ -87,6 +112,8 @@ class HubEndpointSettings(
             pinned = pinned,
             tests = results.value.mapNotNull { (key, result) -> urls[key]?.let { it to result.copy(url = it) } }.toMap(),
             testing = running.value.keys.mapNotNullTo(HashSet(), urls::get),
+            mode = overrides.mode,
+            selected = overrides.selected?.let { urls[it] ?: it },
         )
     }
 
@@ -122,6 +149,7 @@ class HubEndpointSettings(
                 disabled = (current.disabled - old - new).let { if (old in current.disabled) it + new else it },
                 // In the old one's place; a stale copy of the new key (an address the hub no longer sends) goes.
                 order = current.order?.mapNotNull { when (it) { old -> new; new -> null; else -> it } },
+                selected = when (current.selected) { old -> new; else -> current.selected },
             )
         }
         if (replaced != old) results.update { it - old }
@@ -135,6 +163,7 @@ class HubEndpointSettings(
             current.copy(
                 manual = current.manual.filterNot { endpointKey(it) == key }, disabled = current.disabled - key,
                 order = current.order?.minus(key),
+                selected = current.selected?.takeUnless { it == key },
             ).also { keepOneEnabled(current, it, key) }
         }
         results.update { it - key }
@@ -163,6 +192,24 @@ class HubEndpointSettings(
 
     override suspend fun resetOrder() {
         edit { it.copy(order = null) }
+    }
+
+    override suspend fun setMode(mode: NetworkMode) {
+        edit { current ->
+            val candidates = arrangeEndpoints(connection.candidates(current), current)
+                .filter { endpointKey(it.url) !in current.disabled && mode.matches(it.kind) }
+            val selected = current.selected?.takeIf { key -> candidates.any { endpointKey(it.url) == key } }
+                ?: candidates.firstOrNull()?.let { endpointKey(it.url) }
+            current.copy(mode = mode, selected = selected)
+        }
+    }
+
+    override suspend fun select(url: String) {
+        edit { current ->
+            val endpoint = requireEntry(current, endpointKey(url))
+            if (endpointKey(endpoint.url) in current.disabled) throw EndpointEditException(CoreText.of(Key.EndpointNotListed))
+            current.copy(mode = networkModeOf(endpoint.kind), selected = endpointKey(endpoint.url), disabled = current.disabled)
+        }
     }
 
     /** The keys of every entry in the order settings lists them (and the connection tries the enabled ones). */

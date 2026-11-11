@@ -176,6 +176,8 @@ class ConnectionRuntime @Inject constructor(application: Application) : HubConne
         override suspend fun setEnabled(url: String, enabled: Boolean) = controller().setEnabled(url, enabled)
         override suspend fun reorder(urls: List<String>) = controller().reorder(urls)
         override suspend fun resetOrder() = controller().resetOrder()
+        override suspend fun setMode(mode: persona.core.contracts.api.NetworkMode) = controller().setMode(mode)
+        override suspend fun select(url: String) = controller().select(url)
         override suspend fun test(url: String) = controller().test(url)
         private fun controller() = settings.value ?: throw EndpointEditException(persona.core.contracts.CoreText.of(persona.core.contracts.CoreText.Key.PairHubFirst))
     }

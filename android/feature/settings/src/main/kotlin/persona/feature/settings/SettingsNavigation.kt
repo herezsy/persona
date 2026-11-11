@@ -35,6 +35,7 @@ fun SettingsPage.toInitialPage(): String = when (this) {
     SettingsPage.FeishuBot -> "feishu-bot"
     SettingsPage.Sent -> "connectors/sent"
     SettingsPage.Connectors -> "connectors"
+    SettingsPage.Network -> "network"
 }
 
 /** The legacy ledger page opens at its new location; the root and unknown names have no destination. */

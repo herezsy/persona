@@ -215,6 +215,26 @@
     <string name="settings_engine_save_failed">保存に失敗しました：%1$s</string>
 
     <!-- Candidate addresses (Connection diagnostics) -->
+    <string name="settings_network_title">ネットワーク</string>
+    <string name="settings_network_row_subtitle">自宅か外出先 · 選ぶまで変わりません</string>
+    <string name="settings_network_caption">この端末がハブへ届く経路を選びます。起動をまたいでも保持され、再接続や疎通確認では自動切替しません。</string>
+    <string name="settings_network_mode_header">接続モード</string>
+    <string name="settings_network_mode_home">自宅</string>
+    <string name="settings_network_mode_home_subtitle">自宅やオフィスの LAN アドレス</string>
+    <string name="settings_network_mode_away">外出先</string>
+    <string name="settings_network_mode_away_subtitle">外出時に使う外部アドレス</string>
+    <string name="settings_network_mode_unset">まだ選んでいません。最初に繋がった経路が固定され、いつでもここで切り替えられます。</string>
+    <string name="settings_network_addresses_home">自宅のアドレス</string>
+    <string name="settings_network_addresses_away">外出先のアドレス</string>
+    <string name="settings_network_addresses_all">アドレス</string>
+    <string name="settings_network_empty_home">LAN アドレスがありません。接続診断で追加するか、「外出先」に切り替えてください。</string>
+    <string name="settings_network_empty_away">外部アドレスがありません。接続診断で追加するか、「自宅」に切り替えてください。</string>
+    <string name="settings_network_empty_all">候補アドレスがまだありません。ハブをペアリングするか、接続診断で追加してください。</string>
+    <string name="settings_network_in_use">使用中</string>
+    <string name="settings_network_selected">選択中</string>
+    <string name="settings_network_need_pair">ネットワークを切り替えるには、先にハブをペアリングしてください。</string>
+    <string name="settings_network_diag_hint">個別アドレスの追加・無効化・並べ替えは接続診断で行います。</string>
+
     <string name="settings_endpoint_hint_unchanged">アドレスは変更されていません</string>
     <string name="settings_endpoint_hint_will_save">%1$s（%2$s）として保存します</string>
     <string name="settings_endpoint_save_failed">保存できませんでした。もう一度お試しください。</string>

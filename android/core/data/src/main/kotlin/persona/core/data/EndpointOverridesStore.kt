@@ -2,6 +2,7 @@ package persona.core.data
 
 import androidx.datastore.core.DataStore
 import persona.core.contracts.api.EndpointOverrides
+import persona.core.contracts.api.NetworkMode
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,6 +21,10 @@ internal data class EndpointOverridesDocument(
     val order: List<String>? = null,
     /** Written by the first version (one preferred candidate, tried first); read as an order that starts with it. */
     val preferred: String? = null,
+    /** Sticky network mode: `home` or `away`; null until chosen. */
+    val mode: String? = null,
+    /** Sticky selected network key; survives launches and process death with the pairing. */
+    val selected: String? = null,
 )
 
 /** The pairing's route choices (manual candidates, disabled ones, the order to try); a missing file is the default. */
@@ -44,6 +49,29 @@ class EndpointOverridesStore internal constructor(
 }
 
 private fun EndpointOverridesDocument.overrides() =
-    EndpointOverrides(manual.distinct(), disabled.toSet(), order?.distinct() ?: preferred?.let(::listOf))
+    EndpointOverrides(
+        manual = manual.distinct(),
+        disabled = disabled.toSet(),
+        order = order?.distinct() ?: preferred?.let(::listOf),
+        mode = mode.toNetworkMode(),
+        selected = selected ?: preferred,
+    )
 
-private fun EndpointOverrides.document() = EndpointOverridesDocument(manual = manual, disabled = disabled.toList(), order = order)
+private fun EndpointOverrides.document() = EndpointOverridesDocument(
+    manual = manual,
+    disabled = disabled.toList(),
+    order = order,
+    mode = mode?.wire(),
+    selected = selected,
+)
+
+private fun NetworkMode.wire() = when (this) {
+    NetworkMode.Home -> "home"
+    NetworkMode.Away -> "away"
+}
+
+private fun String?.toNetworkMode() = when (this?.lowercase()) {
+    "home" -> NetworkMode.Home
+    "away" -> NetworkMode.Away
+    else -> null
+}

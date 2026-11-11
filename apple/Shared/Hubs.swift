@@ -91,6 +91,12 @@ nonisolated struct PairedHub: Codable, Hashable, Sendable, Identifiable {
     /// SHA-256 (hex) of the pairing token `deviceID`'s token was traded for: the same pairing link handled again (scanned
     /// twice, opened from the camera too) keeps the device's token instead of going back to one the hub drops (#2766).
     var tradedPairing: String?
+    /// Sticky network mode (home / away). Nil until the first successful connect or an explicit Settings › Network choice.
+    var networkMode: HubNetworkMode?
+    /// Sticky selected hub address (absolute URL string). Kept across launches; only Settings › Network changes it.
+    var selectedEndpoint: String?
+    /// Known hub addresses for this pairing (pair URL, `alt=`, public_url, mesh self endpoints), oldest first.
+    var candidateEndpoints: [String] = []
 
     init(id: String = PairedHub.newID(), config: ServerConfig, group: String = "", hubID: String? = nil, hubName: String? = nil,
          deviceID: String? = nil, watch: ServerConfig? = nil, mesh: [MeshHub]? = nil, addedAt: Date = .now) {
@@ -103,6 +109,32 @@ nonisolated struct PairedHub: Codable, Hashable, Sendable, Identifiable {
         self.watch = watch
         self.mesh = mesh
         self.addedAt = addedAt
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case id, config, group, hubID, hubName, deviceID, watch, watchDeviceID, mesh, addedAt, ssh, inAppTunnel, localProxy
+        case tradedPairing, networkMode, selectedEndpoint, candidateEndpoints
+    }
+
+    init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        id = try c.decode(String.self, forKey: .id)
+        config = try c.decode(ServerConfig.self, forKey: .config)
+        group = try c.decodeIfPresent(String.self, forKey: .group) ?? ""
+        hubID = try c.decodeIfPresent(String.self, forKey: .hubID)
+        hubName = try c.decodeIfPresent(String.self, forKey: .hubName)
+        deviceID = try c.decodeIfPresent(String.self, forKey: .deviceID)
+        watch = try c.decodeIfPresent(ServerConfig.self, forKey: .watch)
+        watchDeviceID = try c.decodeIfPresent(String.self, forKey: .watchDeviceID)
+        mesh = try c.decodeIfPresent([MeshHub].self, forKey: .mesh)
+        addedAt = try c.decodeIfPresent(Date.self, forKey: .addedAt) ?? .now
+        ssh = try c.decodeIfPresent(SSHRoute.self, forKey: .ssh)
+        inAppTunnel = try c.decodeIfPresent(InAppTunnelRoute.self, forKey: .inAppTunnel)
+        localProxy = try c.decodeIfPresent(LocalProxyRoute.self, forKey: .localProxy)
+        tradedPairing = try c.decodeIfPresent(String.self, forKey: .tradedPairing)
+        networkMode = try c.decodeIfPresent(HubNetworkMode.self, forKey: .networkMode)
+        selectedEndpoint = try c.decodeIfPresent(String.self, forKey: .selectedEndpoint)
+        candidateEndpoints = try c.decodeIfPresent([String].self, forKey: .candidateEndpoints) ?? []
     }
 
     static func newID() -> String { "h" + String(UUID().uuidString.replacingOccurrences(of: "-", with: "").prefix(10)).lowercased() }

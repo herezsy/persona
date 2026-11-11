@@ -156,6 +156,17 @@ Device record (2026-10-31, ColorOS 16 / Android 16, single observation): with th
 - Tapping a notification and session deep links go through the same navigation entry (the same on cold start and when the App is already open). When the notification link specifies `tab`, it lands on Persona or Agents directly, without waiting for session metadata; when it doesn't, it waits for the metadata to arrive before routing. The terminal fallback action (`target=terminal`) opens that session's terminal, and back returns to the original chat. Cards not attached to a session (empty `session_id`, e.g. `personad ask` in a plain terminal, #4515) still raise notifications; opening one lands on the Agents page: first any chat open on the Agents page is closed, then if the card is in the list it opens directly (the link carries `machine` and `request` but no `session`, used only locally on the phone, #4808). There is no terminal button.
 - The setup checklist offers system entries for notification permission, battery restrictions, auto-launch and so on, plus scheduling, showing and reporting a lock-screen test. Lock-screen survival, notification display, recovery after reboot and battery use on each ROM are all unmeasured.
 
+<a id="组网切换"></a>
+
+## Network switching (Settings › Network)
+
+Top-level **Settings › Hub › Network** (组网切换) picks a sticky connection mode for the active pairing:
+
+- **Home** — LAN candidates only (`kind == "lan"`).
+- **Away** — outside candidates (domain / public IPv6 / public IPv4).
+
+The mode and the selected address are stored with the pairing in `endpoints.enc` (`EndpointOverrides.mode` / `selected`) and survive launches and process death. They change only when the user switches them on this page (or picks a specific address there). Launch, reconnect and the periodic upward recheck do **not** move to another network once a mode or selection is set. Connection diagnostics still edits individual candidates; Network is the prominent switch.
+
 <a id="连接地址设置--连接诊断"></a>
 
 ## Connection addresses (Settings › Connection diagnostics)

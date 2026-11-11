@@ -464,11 +464,22 @@ class OkHttpHubConnection(
      * Applies new route choices. Without a route, or when the one in use is no longer an enabled candidate, the
      * connection starts over. A new order is only stored: the connection follows it at the next reconnect or periodic
      * recheck in [runSocket], so dragging an address never drops a working connection (user decision, 2026-11-02).
+     * Changing the sticky network mode or selected network always reconnects so the new choice is used at once.
      */
     fun updateOverrides(value: EndpointOverrides) {
         val previous = _overrides.getAndUpdate { value }
         if (previous == value) return
         val active = _route.value?.endpoint?.url?.let(::endpointKey)
+        val activeKind = _route.value?.endpoint?.kind
+        // Recording the sticky selection for the route already in use must not bounce the socket
+        // (first connect seeds mode+selected). A Settings change that leaves that route still valid also skips.
+        val stickyChanged = previous.mode != value.mode || previous.selected != value.selected
+        val stillOnSticky = active != null && value.selected == active &&
+            (value.mode == null || activeKind == null || value.mode!!.matches(activeKind))
+        if (stickyChanged && !stillOnSticky) {
+            reconnect()
+            return
+        }
         // Through a tunnel the addresses are asked again every so often anyway.
         if (active != null && tunnelRoutes.containsKey(active)) return
         if (active == null || active !in usableEndpoints(value).map { endpointKey(it.url) }) reconnect()
@@ -760,6 +771,7 @@ class OkHttpHubConnection(
                 if (!foreground) continue
                 if (tunnel != null) {
                     // Through a tunnel only because no address answered: back straight to the hub once one does.
+                    // A sticky network selection still allows returning from a tunnel to that same selected address.
                     val direct = usableEndpoints().takeIf { it.isNotEmpty() } ?: continue
                     try { probeRoutes(direct, DIRECT_PROBE_MILLIS) }
                     catch (cancelled: CancellationException) { throw cancelled }
@@ -767,6 +779,8 @@ class OkHttpHubConnection(
                     reconnect()
                     break
                 }
+                // Sticky network mode: never auto-switch to another candidate from probes; only Settings › Network does.
+                if (_overrides.value.mode != null || _overrides.value.selected != null) continue
                 // Only a candidate listed above the one in use can take over; the list's order is the order tried. Each
                 // gets the step it has alone in the race: one that answers later would lose the race to the one in use
                 // again, and the connection would start over at every recheck for nothing.
@@ -1005,15 +1019,18 @@ class OkHttpHubConnection(
     }
 
     private fun usable(candidates: List<Endpoint>, overrides: EndpointOverrides) =
-        arrangeEndpoints(candidates, overrides).filter { endpoint ->
-            if (endpointKey(endpoint.url) in overrides.disabled) false
-            else if (!permissionMissing()) true else {
-                val host = runCatching { endpoint.baseUrl().host }.getOrNull()
-                val literal = host?.let(::literalAddress)
-                endpoint.kind != "lan" && host !in network.localHosts &&
-                    (literal == null || literal.isLoopbackAddress || !http.localAddressPolicy.allows(literal))
-            }
-        }
+        stickyEndpoints(
+            arrangeEndpoints(candidates, overrides).filter { endpoint ->
+                if (endpointKey(endpoint.url) in overrides.disabled) false
+                else if (!permissionMissing()) true else {
+                    val host = runCatching { endpoint.baseUrl().host }.getOrNull()
+                    val literal = host?.let(::literalAddress)
+                    endpoint.kind != "lan" && host !in network.localHosts &&
+                        (literal == null || literal.isLoopbackAddress || !http.localAddressPolicy.allows(literal))
+                }
+            },
+            overrides,
+        )
 
     /** A member's manual candidates, then what it sent while connected through it, else what the group knew of it. */
     private fun memberCandidates(member: HubMember): List<Endpoint> = mergeEndpoints(member.overrides.manual,
