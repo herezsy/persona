@@ -1448,7 +1448,7 @@ Like Telegram: network trouble shows no banner; **the page title becomes "small 
 
 ## Network switching (Settings › Network)
 
-Top-level **Settings › Server › Network** (组网切换) picks a sticky **Home** (LAN) or **Away** (outside) mode for the current hub group. The mode and selected address live on `PairedHub` in the keychain registry (`networkMode`, `selectedEndpoint`, `candidateEndpoints`) and survive launches. Connect / reconnect / health probes do not change them; only this Settings page does. Candidate addresses come from the pairing URL, hub `public_url`, and the hub's own mesh endpoints. User-configured SSH / local-proxy / in-app tunnels still apply when the sticky address itself does not answer.
+Top-level **Settings › Server › Network** (组网切换) picks a sticky **Home** (LAN) or **Away** (outside) mode for the current hub group, then lists the concrete candidate addresses for that mode so the phone can use multiple hub paths, not only a Boolean. The mode and selected address live on `PairedHub` in the keychain registry (`networkMode`, `selectedEndpoint`, `candidateEndpoints`) and survive launches. Connect / reconnect / health probes do not change them; only this Settings page does. Candidate addresses come from the pairing URL, hub `public_url`, and the hub's own mesh endpoints. User-configured SSH / local-proxy / in-app tunnels still apply when the sticky address itself does not answer. Shown on iOS and visionOS only; the native Mac app stays frozen and uses the web app's Settings › Network instead (`docs/web/web.md`, "Network switching").
 
 ## SSH tunnels (fallback when direct connections fail, #891)
 

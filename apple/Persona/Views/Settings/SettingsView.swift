@@ -24,6 +24,7 @@ struct SettingsView: View {
         return s.version
     }
 
+    #if os(iOS) || os(visionOS)
     /// Settings › Network row value: Home / Away when a sticky mode is set.
     private var networkModeSummary: String {
         guard let group = model.hub?.group ?? model.registry.groups.first,
@@ -33,6 +34,7 @@ struct SettingsView: View {
         case .away: return String(localized: "Away")
         }
     }
+    #endif
 
     nonisolated private struct SlotsKey: Hashable, Sendable { var source: ExtensionSlots.Source; var depth: Int }
 
@@ -216,13 +218,15 @@ struct SettingsView: View {
                 if !model.isDemo {
                     Section {
                         Group {
-                            // Sticky home / away network (组网切换): top of Server, not buried under diagnostics.
+                            #if os(iOS) || os(visionOS)
+                            // Sticky home / away network (组网切换): phones only. Desktop uses the web app (Mac app is frozen).
                             NavigationLink(value: SettingsPage.network) {
                                 SettingsRow(title: String(localized: "Network"), symbol: Theme.Icon.hubGroup, tint: Theme.Hue.blue,
                                             value: networkModeSummary, look: .oneLine)
                             }
                             .settingsListRow(SettingsPage.network)
                             .accessibilityIdentifier("settings.network")
+                            #endif
                             // Every hub paired, by group: add one, rename, disconnect one (docs/protocol/multi-hub.md). Also with
                             // one hub: it is where a second one is added (the only row the single-hub page gained).
                             NavigationLink(value: SettingsPage.hubs) {
@@ -541,8 +545,10 @@ enum SettingsPage: Hashable {
     case knowledgeSelection
     /// Settings › hub: the hubs paired, by group (docs/protocol/multi-hub.md).
     case hubs
-    /// Settings › Network: sticky home / away network switch (组网切换).
+    #if os(iOS) || os(visionOS)
+    /// Settings › Network: sticky home / away network switch (组网切换). Phones only; desktop uses the web app.
     case network
+    #endif
     case hub, skills
     /// A connector of the hub's by its id (GET /api/v1/connectors): GitHub…; `manager`: another manager's copy
     /// (docs/assistant/managers.md "Grouping"), nil the default's.
@@ -636,7 +642,9 @@ private struct SettingsDestinations: ViewModifier {
         case .triage: TriageSettingsView()
         case .modelConfiguration: ModelConfigurationView()
         case .hubs: HubsView()
+        #if os(iOS) || os(visionOS)
         case .network: NetworkSwitchView()
+        #endif
         case .sshTunnel(let id): HubSSHTunnelPage(hubID: id)
         case .inAppTunnel(let id): HubInAppTunnelPage(hubID: id)
         case .localProxy(let id): HubLocalProxyPage(hubID: id)

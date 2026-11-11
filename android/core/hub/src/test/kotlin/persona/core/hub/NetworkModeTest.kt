@@ -9,7 +9,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class NetworkModeTest {
-    private val lan = Endpoint("http://192.168.1.10:18660", "lan")
+    private val lan = Endpoint("http://127.0.0.1:18660", "lan")
     private val name = Endpoint("https://hub.example.com:18662", "name")
     private val ipv6 = Endpoint("https://[2001:db8::1]:18662", "ipv6")
 

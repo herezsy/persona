@@ -1264,6 +1264,15 @@ When the machine list contains two or more `hub_id`s, the hub name is added to m
 the chat page header, ⌘K search results, and the computer picker in New agent (`src/lib/mesh.ts`: `hubLabel`, `machineWithHub`, `routeText`). With only one `hub_id` (or an old hub without the field) nothing is added and the UI is unchanged.
 **Settings › General › This browser** shows this hub's name (`hub_name` from hello) and the linked hubs (`mesh.hubs` from hello after authentication).
 
+### Network switching (Settings › Network, 组网切换)
+
+On computers people use the web app (browser or installed PWA), not a second desktop client. **Settings › Network** is the sticky Home / Away switch for this hub's addresses, matching iOS and Android:
+
+- **Home** uses LAN / local addresses; **Away** uses public IPv4 / IPv6 / named hosts. The page lists every candidate path (this origin, hello `public_url` / `endpoints`, and addresses remembered from earlier visits on this origin), not a Boolean alone.
+- Mode and selected URL live in this origin's `localStorage` (`persona.network.mode`, `persona.network.selected`, `persona.network.candidates`). Launch, reconnect and probes never change them; only an explicit choice on this Settings page does.
+- Switching opens that address's own page (same-origin design, `src/lib/network.ts`). The hubs list rides in `#hubs=` as for Switch hub; the device token is handed once in `#token=` so the other origin can sign in without a paste (cleared by `takeToken`, never stored in history). Other hubs stay under Switch hub below.
+- Code: `src/lib/network.ts`, `src/views/settings/NetworkSettings.tsx`. The native Mac app does not gain this UI (`docs/apple/mac.md` is frozen).
+
 ### Switch hub (#1014)
 
 When one person uses several hubs that are not linked (their own, a family member's), the web app switches between them. Android pairs with several at once (`docs/android/android.md` ("Multiple hubs")); the web app does not:

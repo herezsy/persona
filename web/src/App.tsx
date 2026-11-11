@@ -10,6 +10,7 @@ import { navigationCrumb } from "./lib/error-reports";
 import { lazyPage, preloadPages } from "./lib/lazy-page";
 import { drawerA11y, focusBack, useDrawerDrag } from "./lib/drawer";
 import { acceptHubs, here, rememberHub, takeHubs } from "./lib/hubs";
+import "./lib/network-start"; // sticky Network (组网切换): listen for hello endpoints
 import { useSessionPanels } from "./lib/panel-memory";
 import { resolveTab, tabOfSessionLink, tabPagePane } from "./lib/herdr-tree";
 import { resolveSessionLink, sessionLinkRoute, type SessionLink } from "./lib/session-link";

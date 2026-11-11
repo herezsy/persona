@@ -160,7 +160,7 @@ Device record (2026-10-31, ColorOS 16 / Android 16, single observation): with th
 
 ## Network switching (Settings › Network)
 
-Top-level **Settings › Hub › Network** (组网切换) picks a sticky connection mode for the active pairing:
+Top-level **Settings › Hub › Network** (组网切换) picks a sticky connection mode for the active pairing, then lists the concrete candidate endpoints for that mode (multiple hub paths, not a Boolean alone):
 
 - **Home** — LAN candidates only (`kind == "lan"`).
 - **Away** — outside candidates (domain / public IPv6 / public IPv4).

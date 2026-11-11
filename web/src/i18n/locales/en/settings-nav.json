@@ -21,6 +21,8 @@
   "hint_connectors": "Let Persona read mail, Feishu, GitHub",
   "hint_extensions": "Add abilities: connectors, channels, voice",
   "hint_devices": "Signed-in phones and browsers",
+  "tab_network": "Network",
+  "hint_network": "Home or Away path to this hub (组网切换)",
   "hint_hub": "Hub updates, the agent board and extension download mirrors",
   "tab_managers": "Assistants",
   "hint_managers": "Where each assistant runs and whether it's online",

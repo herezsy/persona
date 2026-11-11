@@ -6,8 +6,8 @@ import { t } from "../../i18n";
 import { settingsTab } from "../../lib/channels";
 import type { IconName } from "../../ui/icons";
 
-export type Tab = "general" | "persona" | "notifications" | "models" | "agents" | "channels" | "connectors" | "extensions" | "shortcuts" | "devices" | "hub" | "managers" | "knowledge" | "avatar";
-export const TABS: Tab[] = ["general", "persona", "notifications", "models", "agents", "channels", "connectors", "extensions", "shortcuts", "devices", "hub", "managers", "knowledge", "avatar"];
+export type Tab = "general" | "persona" | "notifications" | "models" | "agents" | "channels" | "connectors" | "extensions" | "shortcuts" | "devices" | "network" | "hub" | "managers" | "knowledge" | "avatar";
+export const TABS: Tab[] = ["general", "persona", "notifications", "models", "agents", "channels", "connectors", "extensions", "shortcuts", "devices", "network", "hub", "managers", "knowledge", "avatar"];
 export const AGENT_KINDS = ["claude", "codex", "agy", "omp"] as const;
 export type AgentTab = (typeof AGENT_KINDS)[number];
 export type SettingsSection = "providers" | "model-config" | "translation" | AgentTab;
@@ -43,6 +43,7 @@ export const TAB_INFO: Record<Tab, { label: string; icon: IconName; hint: string
   extensions: { label: t("settings-nav.tab_extensions"), icon: "extension", hint: t("settings-nav.hint_extensions") },
   shortcuts: { label: t("settings-nav.tab_shortcuts"), icon: "keyboard", hint: t("settings-nav.hint_shortcuts") },
   devices: { label: t("settings-nav.tab_devices"), icon: "key", hint: t("settings-nav.hint_devices") },
+  network: { label: t("settings-nav.tab_network"), icon: "wifi", hint: t("settings-nav.hint_network") },
   hub: { label: "hub", icon: "hub", hint: t("settings-nav.hint_hub") },
   managers: { label: t("settings-nav.tab_managers"), icon: "person", hint: t("settings-nav.hint_managers") },
 };
@@ -54,7 +55,7 @@ export type NavGroup = "assistant" | "device" | "hub";
 export const NAV_GROUPS: { key: NavGroup; tabs: Tab[] }[] = [
   { key: "assistant", tabs: ["models", "persona", "channels", "connectors", "extensions", "knowledge", "agents"] },
   { key: "device", tabs: ["general", "notifications", "shortcuts"] },
-  { key: "hub", tabs: ["hub", "managers", "avatar", "devices"] },
+  { key: "hub", tabs: ["network", "hub", "managers", "avatar", "devices"] },
 ];
 
 /** The current assistant's group: its pages follow the pick, and an item opened in one goes back to its list when the
@@ -108,6 +109,8 @@ export const SEARCH_INDEX: SearchGroup[] = [
   { tab: "extensions", group: t("settings-extensions.market_title"), anchor: "market" },
   // Shortcuts / hub
   { tab: "shortcuts", group: t("settings-shortcutsettings.terminal_title"), anchor: "shortcuts-terminal" },
+  { tab: "network", group: t("settings-network.mode_title"), anchor: "network-mode" },
+  { tab: "network", group: t("settings-network.addresses"), anchor: "network-addresses" },
   { tab: "hub", group: t("settings-hubsettings.version"), anchor: "hub-version" },
   { tab: "hub", group: t("settings-hubsettings.update"), anchor: "hub-update" },
 ];
