@@ -45,6 +45,7 @@ class SettingsNavigationTest {
             SettingsPage.FeishuBot to "feishu-bot",
             SettingsPage.Sent to "connectors/sent",
             SettingsPage.Connectors to "connectors",
+            SettingsPage.Network to "network",
         )
         assertEquals(SettingsPage.entries.toSet(), pages.keys)
         assertEquals(pages.size, pages.values.toSet().size)

@@ -220,7 +220,18 @@ extension AppModel {
     /// What a group's socket asks before each attempt when the group has more than one place to go: the quickest
     /// hub that answers (HubRoute), or a tunnel when none does (`tunnelRoute`, docs/operations/network.md「Connecting to hub through SSH」
     /// 「经 App 内隧道连 hub」). One place and no tunnel: nil, the socket goes where it was told.
+    /// A sticky Settings › Network selection wins: the last chosen home/away address is reused, with no probe-based switch.
     func routePicker(_ group: String) -> (@MainActor () async -> ServerConfig?)? {
+        if let sticky = stickyNetworkConfig(group) {
+            let tunneled = !hubTunnels(group).isEmpty
+            if !tunneled { return { sticky } }
+            return { [weak self] in
+                guard let self else { return sticky }
+                // User-configured tunnels still apply when the sticky address itself does not answer.
+                if !self.hubTunnels(group).isEmpty { return await self.tunnelRoute(group, preferred: sticky) }
+                return sticky
+            }
+        }
         let tunneled = !hubTunnels(group).isEmpty
         guard tunneled || HubRoute.candidates(registry, group: group).count > 1 else { return nil }
         return { [weak self] in
@@ -229,6 +240,12 @@ extension AppModel {
             let candidates = HubRoute.candidates(self.registry, group: group)
             return await HubRoute.pick(candidates)?.config
         }
+    }
+
+    /// The sticky home/away ServerConfig for a group's primary hub, when Settings › Network (or the first connect) set one.
+    func stickyNetworkConfig(_ group: String) -> ServerConfig? {
+        guard let hub = registry.primary(group) else { return nil }
+        return HubNetworkSwitch.stickyConfig(for: hub, publicURL: link(group)?.hello.publicURL)
     }
 
     /// A hello came: remember which hub answered, its name and its group (`mesh`), and regroup the paired hubs when
@@ -248,6 +265,13 @@ extension AppModel {
             // No mesh in its hello (a hub before the mesh, or one that left it): it lists nobody now. A mesh kept from
             // an earlier hello would show its old peers (and itself, under an old hub_id) as hubs of the group.
             if hello.mesh == nil { r.hubs[i].mesh = nil }
+            // Remember reachable addresses and seed sticky home/away once (Settings › Network owns later changes).
+            if let connected = on?.url {
+                let selfID = hello.hubID ?? r.hubs[i].hubID
+                let meshSelf = (hello.mesh ?? []).filter { $0.hubID == selfID || $0.isSelf == true }
+                    .flatMap { $0.endpoints ?? [] }
+                HubNetworkSwitch.remember(connected: connected, publicURL: hello.publicURL, meshSelf: meshSelf, on: &r.hubs[i])
+            }
         }
         if let mesh = hello.mesh {
             r.hubs[i].mesh = mesh
@@ -350,6 +374,38 @@ extension AppModel {
             link.live.connect(link.fallback)
         }
         pushWatchConfigs()
+    }
+
+    /// Settings › Network: sticky home / away for the current hub group. Reconnects immediately; probes never undo it.
+    func setNetworkMode(_ mode: HubNetworkMode) {
+        guard let group = hub?.group ?? registry.groups.first,
+              let i = registry.hubs.firstIndex(where: { $0.group == group && $0.id == registry.primary(group)?.id })
+                ?? registry.hubs.firstIndex(where: { $0.group == group }) else { return }
+        var r = registry
+        HubNetworkSwitch.applying(mode: mode, to: &r.hubs[i], publicURL: link(group)?.hello.publicURL)
+        registry = r
+        saveRegistry(r)
+        applyStickyNetwork(group)
+    }
+
+    /// Settings › Network: pick one candidate address as the sticky network.
+    func selectNetwork(_ url: URL) {
+        guard let group = hub?.group ?? registry.groups.first,
+              let i = registry.hubs.firstIndex(where: { $0.group == group && $0.id == registry.primary(group)?.id })
+                ?? registry.hubs.firstIndex(where: { $0.group == group }) else { return }
+        var r = registry
+        HubNetworkSwitch.applying(url: url, to: &r.hubs[i])
+        registry = r
+        saveRegistry(r)
+        applyStickyNetwork(group)
+    }
+
+    /// Rebuilds the group's route picker and reconnects onto the sticky address.
+    private func applyStickyNetwork(_ group: String) {
+        buildLinks()
+        guard let link = link(group), let config = stickyNetworkConfig(group) ?? registry.primary(group)?.config else { return }
+        link.live.disconnect()
+        link.live.connect(config)
     }
 
     /// Settings › hub › Rename: what lists call a group ("" goes back to its hub's own name).

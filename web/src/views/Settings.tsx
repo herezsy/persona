@@ -42,6 +42,7 @@ import { settingsTarget } from "../lib/channels";
 import { extensionsRoute, routeSub } from "../lib/extension-market";
 import { otherManager, ownedSub, parseOwnedSub, pinManagerAt, useChosenManager } from "../lib/manager-choice";
 import { HubSettings } from "./settings/HubSettings";
+import { NetworkSettings } from "./settings/NetworkSettings";
 import { ManagersSettings } from "./settings/ManagersSettings";
 import { LauncherQuota } from "./settings/LauncherQuota";
 import { LauncherExtensionSections } from "./settings/ExtensionView";
@@ -340,6 +341,7 @@ export function Settings({ onToggleSidebar }: { onToggleSidebar: () => void }) {
               ))}
               {tab === "shortcuts" && <ShortcutSettings />}
               {tab === "devices" && <Devices />}
+              {tab === "network" && <NetworkSettings />}
               {tab === "hub" && <>
                 <HubSettings />
                 <AgentGroup />

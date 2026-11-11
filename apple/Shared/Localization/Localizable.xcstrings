@@ -45876,41 +45876,116 @@
     "Couldn't dismiss draft: %@": {
       "extractionState": "manual",
       "localizations": {
-        "en": { "stringUnit": { "state": "translated", "value": "Couldn't dismiss draft: %@" } },
-        "ja": { "stringUnit": { "state": "translated", "value": "下書きを非表示にできませんでした：%@" } },
-        "zh-Hans": { "stringUnit": { "state": "translated", "value": "无法忽略草稿：%@" } }
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn't dismiss draft: %@"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "下書きを非表示にできませんでした：%@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无法忽略草稿：%@"
+          }
+        }
       }
     },
     "Couldn't restore draft: %@": {
       "extractionState": "manual",
       "localizations": {
-        "en": { "stringUnit": { "state": "translated", "value": "Couldn't restore draft: %@" } },
-        "ja": { "stringUnit": { "state": "translated", "value": "下書きを復元できませんでした：%@" } },
-        "zh-Hans": { "stringUnit": { "state": "translated", "value": "无法恢复草稿：%@" } }
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn't restore draft: %@"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "下書きを復元できませんでした：%@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无法恢复草稿：%@"
+          }
+        }
       }
     },
     "Task updates aren't fully loaded. Refresh to continue.": {
       "extractionState": "manual",
       "localizations": {
-        "en": { "stringUnit": { "state": "translated", "value": "Task updates aren't fully loaded. Refresh to continue." } },
-        "ja": { "stringUnit": { "state": "translated", "value": "タスクの更新をすべて読み込めませんでした。再読み込みして続けてください。" } },
-        "zh-Hans": { "stringUnit": { "state": "translated", "value": "任务更新尚未完整载入，请刷新后继续。" } }
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Task updates aren't fully loaded. Refresh to continue."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "タスクの更新をすべて読み込めませんでした。再読み込みして続けてください。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "任务更新尚未完整载入，请刷新后继续。"
+          }
+        }
       }
     },
     "Draft dismissed. Nothing was sent.": {
       "extractionState": "manual",
       "localizations": {
-        "en": { "stringUnit": { "state": "translated", "value": "Draft dismissed. Nothing was sent." } },
-        "ja": { "stringUnit": { "state": "translated", "value": "下書きを非表示にしました。何も送信していません。" } },
-        "zh-Hans": { "stringUnit": { "state": "translated", "value": "草稿已忽略，未发送任何内容。" } }
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Draft dismissed. Nothing was sent."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "下書きを非表示にしました。何も送信していません。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "草稿已忽略，未发送任何内容。"
+          }
+        }
       }
     },
     "Draft dismissed, not sent": {
       "extractionState": "manual",
       "localizations": {
-        "en": { "stringUnit": { "state": "translated", "value": "Draft dismissed, not sent" } },
-        "ja": { "stringUnit": { "state": "translated", "value": "非表示の下書き（未送信）" } },
-        "zh-Hans": { "stringUnit": { "state": "translated", "value": "已忽略，未发送的草稿" } }
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Draft dismissed, not sent"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "非表示の下書き（未送信）"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已忽略，未发送的草稿"
+          }
+        }
       }
     },
     "Do not handle [Task Draft]": {
@@ -157254,6 +157329,466 @@
           "stringUnit": {
             "state": "translated",
             "value": "参数无效，不会创建任何内容。"
+          }
+        }
+      }
+    },
+    "Choose how this phone reaches the hub. The app keeps your choice across launches and does not switch by itself on reconnect or connectivity checks.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose how this phone reaches the hub. The app keeps your choice across launches and does not switch by itself on reconnect or connectivity checks."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选择这台手机连 hub 的方式。选定后跨启动保持不变，重连或连通性探测都不会自动切换。"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "この端末がハブへ届く経路を選びます。起動をまたいでも保持され、再接続や疎通確認では自動切替しません。"
+          }
+        }
+      }
+    },
+    "Pair a hub first to switch networks.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pair a hub first to switch networks."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请先配对 hub，才能切换组网。"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ネットワークを切り替えるには、先にハブをペアリングしてください。"
+          }
+        }
+      }
+    },
+    "Away": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Away"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "出门用"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "外出先"
+          }
+        }
+      }
+    },
+    "Connection Mode": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connection Mode"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "连接方式"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "接続モード"
+          }
+        }
+      }
+    },
+    "Home uses LAN addresses; Away uses outside addresses. The choice stays until you switch it here.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Home uses LAN addresses; Away uses outside addresses. The choice stays until you switch it here."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "「在家」用内网地址，「出门用」用公网地址。选定后只会在这里手动切换。"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "「自宅」は LAN アドレス、「外出先」は外部アドレスを使います。ここでの手動切替以外では変わりません。"
+          }
+        }
+      }
+    },
+    "Home Addresses": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Home Addresses"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在家可用的地址"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "自宅のアドレス"
+          }
+        }
+      }
+    },
+    "Away Addresses": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Away Addresses"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "出门可用的地址"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "外出先のアドレス"
+          }
+        }
+      }
+    },
+    "Addresses": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Addresses"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "地址"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "アドレス"
+          }
+        }
+      }
+    },
+    "No LAN addresses are available. Pair again with a LAN URL, or switch to Away.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No LAN addresses are available. Pair again with a LAN URL, or switch to Away."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "没有可用的内网地址。可用内网地址重新配对，或切换到「出门用」。"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "LAN アドレスがありません。LAN の URL で再ペアリングするか、「外出先」に切り替えてください。"
+          }
+        }
+      }
+    },
+    "No outside addresses are available. Add a public URL on the hub, or switch to Home.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No outside addresses are available. Add a public URL on the hub, or switch to Home."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "没有可用的公网地址。可在 hub 上配置公网地址，或切换到「在家」。"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "外部アドレスがありません。ハブに公開 URL を追加するか、「自宅」に切り替えてください。"
+          }
+        }
+      }
+    },
+    "No candidate addresses yet.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No candidate addresses yet."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "还没有候选地址。"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "候補アドレスがまだありません。"
+          }
+        }
+      }
+    },
+    "In Use": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In Use"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在用"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "使用中"
+          }
+        }
+      }
+    },
+    "Selected": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Selected"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已选"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "選択中"
+          }
+        }
+      }
+    },
+    "LAN": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "LAN"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "内网"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "LAN"
+          }
+        }
+      }
+    },
+    "Public IPv6": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Public IPv6"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "公网 IPv6"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "パブリックIPv6"
+          }
+        }
+      }
+    },
+    "Public IPv4": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Public IPv4"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "公网 IPv4"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "パブリックIPv4"
+          }
+        }
+      }
+    },
+    "Domain": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Domain"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "域名"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ドメイン"
+          }
+        }
+      }
+    },
+    "Unknown type": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unknown type"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未知类型"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "不明な種類"
+          }
+        }
+      }
+    },
+    "Tunnels and pairing": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tunnels and pairing"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "隧道与配对"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "トンネルとペアリング"
+          }
+        }
+      }
+    },
+    "To set up SSH tunnels, a local proxy or Cloudflare Access, open hub.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "To set up SSH tunnels, a local proxy or Cloudflare Access, open hub."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "要设置 SSH 隧道、本地代理或 Cloudflare Access，请打开 hub。"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SSH トンネル、ローカルプロキシ、Cloudflare Access の設定は hub から行います。"
           }
         }
       }

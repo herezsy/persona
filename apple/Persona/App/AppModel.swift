@@ -463,11 +463,13 @@ final class AppModel {
         var out: [HubLink] = []
         for g in wanted {
             guard let primary = registry.primary(g) else { continue }
+            // Sticky Settings › Network address is what the socket opens with; probes never replace it.
+            let config = HubNetworkSwitch.stickyConfig(for: primary) ?? primary.config
             if let had = links.first(where: { $0.group == g && !$0.isDemo }) {
-                had.fallback = primary.config
+                had.fallback = config
                 out.append(had)
             } else {
-                out.append(makeLink(g, primary.config))
+                out.append(makeLink(g, config))
             }
         }
         for gone in links where !out.contains(where: { $0 === gone }) { gone.live.disconnect() }
@@ -609,6 +611,9 @@ final class AppModel {
         } else {
             var hub = PairedHub(config: new, hubID: identity?.hubID, hubName: identity?.hubName)
             hub.ssh = ssh
+            hub.candidateEndpoints = [new.url.absoluteString]
+            hub.networkMode = HubNetworkSwitch.mode(for: HubNetworkSwitch.kind(of: new.url))
+            hub.selectedEndpoint = new.url.absoluteString
             tunnels.adopt(SSHTunnels.pairingID, as: hub.id)
             // Listed in a group's mesh already: it joins that group (shown once, not as a group of its own).
             hub.group = identity?.hubID.flatMap { r.group(hubID: $0) } ?? r.newGroupID()

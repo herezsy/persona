@@ -108,8 +108,14 @@ extension AppModel {
     /// Where a group's socket goes next when it has a tunnel, step by step as `HubWay.next` says: straight to the hub
     /// when one of its addresses answers (the tunnels close), else through a tunnel; tunnels set to be used every time
     /// first. Nothing answering at all: the first address, for the socket's own retries.
-    func tunnelRoute(_ group: String) async -> ServerConfig? {
-        let candidates = HubRoute.candidates(registry, group: group)
+    /// `preferred`: sticky Settings › Network address — only that direct candidate is probed; no auto-switch to others.
+    func tunnelRoute(_ group: String, preferred: ServerConfig? = nil) async -> ServerConfig? {
+        let candidates: [HubRoute.Candidate]
+        if let preferred {
+            candidates = [HubRoute.Candidate(config: preferred, hub: registry.primary(group)?.id, center: true)]
+        } else {
+            candidates = HubRoute.candidates(registry, group: group)
+        }
         let tunnels = hubTunnels(group)
         let options = tunnels.map { HubWay.Option(always: $0.always, recent: $0.recent) }
         var seen = HubWay.Seen()
@@ -137,9 +143,9 @@ extension AppModel {
                 return direct?.config
             case .through(let i, let watchDirect):
                 let t = only(tunnels[i], of: tunnels)
-                return watchDirect ? through(t, group) : t.hub.config
+                return watchDirect ? through(t, group, preferred: preferred) : t.hub.config
             case .none:
-                return candidates.first?.config
+                return preferred ?? candidates.first?.config
             }
         }
     }
@@ -152,10 +158,16 @@ extension AppModel {
     }
 
     /// The group goes through `t`, asking the direct way again every so often.
-    private func through(_ t: HubTunnel, _ group: String) -> ServerConfig {
+    private func through(_ t: HubTunnel, _ group: String, preferred: ServerConfig? = nil) -> ServerConfig {
         t.watchDirect(answers: { [weak self] in
             guard let self else { return false }
-            return await HubRoute.answering(HubRoute.candidates(self.registry, group: group)) != nil
+            let candidates: [HubRoute.Candidate]
+            if let preferred {
+                candidates = [HubRoute.Candidate(config: preferred, hub: self.registry.primary(group)?.id, center: true)]
+            } else {
+                candidates = HubRoute.candidates(self.registry, group: group)
+            }
+            return await HubRoute.answering(candidates) != nil
         }, moveBack: { [weak self] in self?.link(group)?.live.reroute() })
         return t.hub.config
     }

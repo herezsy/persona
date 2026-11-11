@@ -215,6 +215,26 @@
     <string name="settings_engine_save_failed">保存失败：%1$s</string>
 
     <!-- Candidate addresses (Connection diagnostics) -->
+    <string name="settings_network_title">组网</string>
+    <string name="settings_network_row_subtitle">在家或出门 · 选定后保持不变</string>
+    <string name="settings_network_caption">选择这台手机连 hub 的方式。选定后跨启动保持不变，重连或连通性探测都不会自动切换。</string>
+    <string name="settings_network_mode_header">连接方式</string>
+    <string name="settings_network_mode_home">在家</string>
+    <string name="settings_network_mode_home_subtitle">家里或办公室局域网上的内网地址</string>
+    <string name="settings_network_mode_away">出门用</string>
+    <string name="settings_network_mode_away_subtitle">出门在外时用的公网地址</string>
+    <string name="settings_network_mode_unset">还没有选定方式。第一次连上会记为当前组网，之后可在这里切换。</string>
+    <string name="settings_network_addresses_home">在家可用的地址</string>
+    <string name="settings_network_addresses_away">出门可用的地址</string>
+    <string name="settings_network_addresses_all">地址</string>
+    <string name="settings_network_empty_home">没有可用的内网地址。可在连接诊断里添加，或切换到「出门用」。</string>
+    <string name="settings_network_empty_away">没有可用的公网地址。可在连接诊断里添加，或切换到「在家」。</string>
+    <string name="settings_network_empty_all">还没有候选地址。请先配对 hub，或在连接诊断里添加。</string>
+    <string name="settings_network_in_use">在用</string>
+    <string name="settings_network_selected">已选</string>
+    <string name="settings_network_need_pair">请先配对 hub，才能切换组网。</string>
+    <string name="settings_network_diag_hint">要添加、停用或调整单个地址的顺序，请打开连接诊断。</string>
+
     <string name="settings_endpoint_hint_unchanged">地址没有改动</string>
     <string name="settings_endpoint_hint_will_save">将保存为 %1$s（%2$s）</string>
     <string name="settings_endpoint_save_failed">没有保存，请重试。</string>

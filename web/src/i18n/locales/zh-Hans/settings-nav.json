@@ -21,6 +21,8 @@
   "hint_connectors": "让 Persona 读你的邮箱、飞书、GitHub",
   "hint_extensions": "装上新能力：连接器、渠道、语音",
   "hint_devices": "已登录的手机、浏览器，连新设备",
+  "tab_network": "组网",
+  "hint_network": "家里 / 在外连这台 hub 的路径（组网切换）",
   "hint_hub": "hub 更新、Agent 看板和扩展下载镜像",
   "tab_managers": "助手",
   "hint_managers": "各个助手跑在哪、在不在线",

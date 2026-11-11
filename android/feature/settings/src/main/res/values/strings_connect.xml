@@ -219,6 +219,27 @@
     <string name="settings_engine_must_choose">Choose an engine to continue. Check the network, then tap Confirm again.</string>
     <string name="settings_engine_save_failed">Couldn\'t save: %1$s</string>
 
+    <!-- Network switching (Settings › Network) -->
+    <string name="settings_network_title">Network</string>
+    <string name="settings_network_row_subtitle">Home or away · stays until you switch</string>
+    <string name="settings_network_caption">Choose how this phone reaches the hub. The app keeps your choice across launches and does not switch by itself on reconnect or connectivity checks.</string>
+    <string name="settings_network_mode_header">Connection mode</string>
+    <string name="settings_network_mode_home">Home</string>
+    <string name="settings_network_mode_home_subtitle">LAN addresses on your home or office network</string>
+    <string name="settings_network_mode_away">Away</string>
+    <string name="settings_network_mode_away_subtitle">Outside addresses for when you are away</string>
+    <string name="settings_network_mode_unset">No mode chosen yet. The first successful connection becomes your sticky network; you can switch here anytime.</string>
+    <string name="settings_network_addresses_home">Home addresses</string>
+    <string name="settings_network_addresses_away">Away addresses</string>
+    <string name="settings_network_addresses_all">Addresses</string>
+    <string name="settings_network_empty_home">No LAN addresses are available. Add one in Connection diagnostics, or switch to Away.</string>
+    <string name="settings_network_empty_away">No outside addresses are available. Add one in Connection diagnostics, or switch to Home.</string>
+    <string name="settings_network_empty_all">No candidate addresses yet. Pair a hub or add one in Connection diagnostics.</string>
+    <string name="settings_network_in_use">In use</string>
+    <string name="settings_network_selected">Selected</string>
+    <string name="settings_network_need_pair">Pair a hub first to switch networks.</string>
+    <string name="settings_network_diag_hint">To add, disable or reorder individual addresses, open Connection diagnostics.</string>
+
     <!-- Candidate addresses (Diagnostics) -->
     <string name="settings_endpoint_hint_unchanged">The address hasn\'t changed</string>
     <string name="settings_endpoint_hint_will_save">Will be saved as %1$s (%2$s)</string>

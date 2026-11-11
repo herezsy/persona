@@ -5,10 +5,33 @@ import persona.core.contracts.CoreText
 import persona.core.contracts.Endpoint
 import persona.core.contracts.api.EndpointCheck
 import persona.core.contracts.api.EndpointOverrides
+import persona.core.contracts.api.NetworkMode
 import java.net.Inet6Address
 import java.net.InetAddress
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
+
+/** Whether [kind] belongs to [mode]: home is LAN only; away is everything else. */
+fun NetworkMode.matches(kind: String): Boolean = when (this) {
+    NetworkMode.Home -> kind == "lan"
+    NetworkMode.Away -> kind != "lan"
+}
+
+/** The sticky mode that fits an endpoint kind (LAN → home, otherwise away). */
+fun networkModeOf(kind: String): NetworkMode =
+    if (kind == "lan") NetworkMode.Home else NetworkMode.Away
+
+/**
+ * Candidates under [overrides.mode], with [overrides.selected] first when it is still among them. Without a mode the
+ * list is unchanged (official try-order). Used by connect and by Settings › Network.
+ */
+fun stickyEndpoints(candidates: List<Endpoint>, overrides: EndpointOverrides): List<Endpoint> {
+    val filtered = overrides.mode?.let { mode -> candidates.filter { mode.matches(it.kind) } } ?: candidates
+    val selected = overrides.selected ?: return filtered
+    val index = filtered.indexOfFirst { endpointKey(it.url) == selected }
+    if (index <= 0) return filtered
+    return listOf(filtered[index]) + filtered.filterIndexed { i, _ -> i != index }
+}
 
 /** At most this many candidates can be added by hand per pairing. */
 const val MAX_MANUAL_ENDPOINTS = 10

@@ -6,6 +6,17 @@ import persona.core.contracts.CoreText
 import kotlinx.coroutines.flow.StateFlow
 
 /**
+ * How this phone reaches the hub: home (LAN) or away (outside / public). Chosen only in Settings; never inferred from
+ * probes, reconnects or network changes. Null until the user picks one (or the first successful connect records it).
+ */
+enum class NetworkMode {
+    /** LAN / home addresses (`kind == "lan"`). */
+    Home,
+    /** Outside / away addresses (name, public IPv6, public IPv4). */
+    Away,
+}
+
+/**
  * Route choices made on this phone for one pairing (docs/android/android.md "Connection addresses"). The hub's endpoint list never
  * overwrites them, and they are erased together with the pairing (unpair, revocation, pairing again).
  */
@@ -19,6 +30,16 @@ data class EndpointOverrides(
      * applies. Keys no longer among the candidates are skipped; candidates missing from it follow at the end.
      */
     val order: List<String>? = null,
+    /**
+     * Sticky network mode (home / away). When set, only matching candidates are tried, and the connection does not
+     * auto-switch to another network on launch, reconnect or connectivity probes.
+     */
+    val mode: NetworkMode? = null,
+    /**
+     * Canonical key of the last network the user selected (or the one first connected under [mode]). Tried first and
+     * kept across launches; cleared when it leaves the candidate set.
+     */
+    val selected: String? = null,
 )
 
 /** Where a candidate came from: the pairing link, the hub's authenticated list, or this phone. */
@@ -66,6 +87,10 @@ data class ConnectionEndpointsState(
     val tests: Map<String, EndpointTestResult> = emptyMap(),
     /** Candidates whose test is running, by [EndpointEntry.url]. */
     val testing: Set<String> = emptySet(),
+    /** Sticky network mode from Settings › Network; null until chosen. */
+    val mode: NetworkMode? = null,
+    /** Sticky selected network key (canonical URL); null until chosen or first connect records it. */
+    val selected: String? = null,
 )
 
 sealed interface EndpointCheck {
@@ -105,6 +130,17 @@ interface ConnectionEndpoints {
 
     /** Drops the user's order: the default rule applies again. */
     suspend fun resetOrder()
+
+    /**
+     * Switches the sticky network mode (home / away). Only this call (and [select]) changes the selected network;
+     * probes and reconnects never do. Reconnects immediately so the new mode is used.
+     */
+    suspend fun setMode(mode: NetworkMode)
+
+    /**
+     * Selects one candidate as the sticky network and locks its mode from its kind. Reconnects immediately.
+     */
+    suspend fun select(url: String)
 
     /** A pinned health request to [url] over a new connection; the result is also kept in [ConnectionEndpointsState.tests]. */
     suspend fun test(url: String): EndpointTestResult

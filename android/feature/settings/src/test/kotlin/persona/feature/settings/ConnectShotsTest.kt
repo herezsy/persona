@@ -126,6 +126,8 @@ class ConnectShotsTest {
         override suspend fun setEnabled(url: String, enabled: Boolean) = Unit
         override suspend fun reorder(urls: List<String>) = Unit
         override suspend fun resetOrder() = Unit
+        override suspend fun setMode(mode: NetworkMode) = Unit
+        override suspend fun select(url: String) = Unit
         override suspend fun test(url: String) = EndpointTestResult(url, true, persona.core.contracts.CoreText.plain("OK"), 40, ago(0))
     }
     private val link = "persona://pair?url=https%3A%2F%2Fhub.example.com%3A18662&token=example-token&hub=example-hub" +

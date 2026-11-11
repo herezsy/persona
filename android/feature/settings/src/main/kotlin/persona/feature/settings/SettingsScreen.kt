@@ -107,6 +107,8 @@ private fun SettingsContent(
     val connection by services.connection.state.collectAsState()
     val machines by services.sessions.machines.collectAsState()
     val paired by services.pairing.isPaired.collectAsState()
+    val networkRoutes by (services.endpoints?.state
+        ?: kotlinx.coroutines.flow.MutableStateFlow(ConnectionEndpointsState())).collectAsState()
     val deviceController = remember(services) { DeviceSettingsState(services.deviceSettings, services.disconnect) }
     val deviceState by deviceController.state.collectAsState()
     // The signed-in Mac's row says "Mute phone" when it is on: read this device's preferences once a desktop shows.
@@ -361,6 +363,12 @@ private fun SettingsContent(
             onReady = { page = "hubs" }, onDiagnostics = { open(SettingsPage.Diagnostics) }, diagnostics = services.diagnostics,
             onBack = { page = "hubs" }, skipWelcome = true, attempts = services.pairingAttempts)
         "diag" -> DiagnosticsScreen(services, onBack = back, footer = deviceFeedback)
+        "network" -> NetworkSwitchScreen(
+            endpoints = services.endpoints,
+            paired = paired,
+            onBack = back,
+            onDiagnostics = { open(SettingsPage.Diagnostics) },
+        )
         "style" -> JListPage(title = stringResource(R.string.settings_style_title), onBack = back) {
             item { AppearanceSettings() }
             item { deviceFeedback() }
@@ -552,6 +560,24 @@ private fun SettingsContent(
             // The hub list is the one row a single hub group adds to settings (docs/android/android.md "Multiple hubs").
             // Hub version (docs/operations/hub-update.md "In the app") follows it while there is a real hub (not demo mode).
             group(listOfNotNull(
+                // Network switching (组网切换): sticky Home / Away, before hubs and diagnostics.
+                if (!paired) null else custom { position ->
+                    JGroupItem(position) {
+                        JRow(
+                            selected = detailKey == SettingsPageRoute(SettingsPage.Network),
+                            title = stringResource(R.string.settings_network_title),
+                            leadingIcon = PhIcons.GlobeSimple,
+                            subtitle = stringResource(R.string.settings_network_row_subtitle),
+                            value = when (networkRoutes.mode) {
+                                NetworkMode.Home -> stringResource(R.string.settings_network_mode_home)
+                                NetworkMode.Away -> stringResource(R.string.settings_network_mode_away)
+                                null -> null
+                            },
+                            onClick = { open(SettingsPage.Network) },
+                            modifier = Modifier.testTag("settings-network"),
+                        )
+                    }
+                },
                 if (services.hubs == null) null else row(SettingsPage.Hubs, R.string.settings_row_hubs, PhIcons.HardDrives, R.string.settings_row_hubs_subtitle),
                 if (hubUpdates == null) null else row(SettingsPage.HubUpdate, R.string.settings_row_hub_update, PhIcons.ArrowsClockwise,
                     R.string.settings_row_hub_update_subtitle) { HubUpdateText.summary(hubUpdateStatus) },
